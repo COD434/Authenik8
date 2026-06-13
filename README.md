@@ -1,8 +1,25 @@
-![Documents Passing](https://img.shields.io/badge/documents-passing-brightgreen)
-[![CI](https://github.com/COD434/Authenik8/actions/workflows/CI.yml/badge.svg?branch=main&event=push)](https://github.com/COD434/Authenik8/actions/workflows/CI.yml)
-![SecurityTests Passing](https://img.shields.io/badge/SecurityTests-passing-brightgreen)
+<div align="center">
+<pre>
+█████╗      █████╗
+██╔══██╗    ██╔══██╗
+███████║    ╚█████╔╝
+██╔══██║    ██╔══██╗
+██║  ██║    ╚█████╔╝
+╚═╝  ╚═╝     ╚════╝
+</pre>
+</div>
 
+[![npm version](https://img.shields.io/npm/v/create-authenik8-app?label=create-authenik8-app)](https://www.npmjs.com/package/create-authenik8-app)
+[![Maintained](https://img.shields.io/github/last-commit/COD434/Authenik8/main?label=maintained)](https://github.com/COD434/Authenik8/commits/main)
+[![CI](https://github.com/COD434/Authenik8/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/COD434/Authenik8/actions/workflows/ci.yml)
+![Documents Passing](https://img.shields.io/badge/documents-passing-brightgreen)
+![Security Tests](https://img.shields.io/badge/security%20tests-passing-brightgreen)
+
+[Create a new Authenik8 project with `create-authenik8-app`](https://github.com/COD434/create-authenik8-app)
+
+<div align="center">
 # Authenik8
+</div>
 
 Authenik8 is a secure authentication and rate-limiting API for modern web apps.
 It gives developers a ready-to-run backend for registration, login, JWT sessions,

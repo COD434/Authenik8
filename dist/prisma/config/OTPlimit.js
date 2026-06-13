@@ -84,10 +84,6 @@ const RATE_LIMIT_CONFIGS = {
         keyGenerator: (req) => req.ip || "unknown"
     }
 };
-(0, exports.initializeRateLimiter)().catch((err) => {
-    console.error("Failed to initialize rate limiters:", err);
-    process.exit(1);
-});
 const OTPLimiterMiddleware = () => createRatelimiter(RATE_LIMIT_CONFIGS.OTP);
 exports.OTPLimiterMiddleware = OTPLimiterMiddleware;
 const LoginLimiterMiddleware = () => createRatelimiter(RATE_LIMIT_CONFIGS.LOGIN);

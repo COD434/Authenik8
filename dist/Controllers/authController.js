@@ -89,7 +89,7 @@ const HandlePasswordError = createPasswordErrorHandler({
 const requestPassword = async (req, res, next) => {
     const { email } = req.body;
     if (!email) {
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             message: "Email is required"
         });
@@ -122,9 +122,9 @@ const verifyResetOTP = async (req, res, next) => {
             }
         });
         if (!user) {
-            res.status(400).json({ error: "Invalid or expired OTP", email });
+            return res.status(400).json({ error: "Invalid or expired OTP", email });
         }
-        res.status(200).json({ success: true, message: "OTP verified,Please enter your new password" });
+        return res.status(200).json({ success: true, message: "OTP verified,Please enter your new password" });
     }
     catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Unknown error";
@@ -135,7 +135,6 @@ exports.verifyResetOTP = verifyResetOTP;
 //Update password
 const UpdatePassword = async (req, res, next) => {
     const { email, password } = req.body;
-    const hashed = await bcrypt_1.default.hash(password, 10);
     if (!email || !password) {
         return res.status(400).json({
             success: false,
@@ -143,6 +142,7 @@ const UpdatePassword = async (req, res, next) => {
         });
     }
     try {
+        const hashed = await bcrypt_1.default.hash(password, 10);
         const user = await validate_1.prisma.user.findFirst({
             where: { email }
         });
@@ -242,8 +242,7 @@ const register = async (req, res, next) => {
     if (!errors.isEmpty()) {
         res.status(400).json({
             success: false,
-            validationErrors: errors.array(),
-            FormData: req.body
+            validationErrors: errors.array()
         });
         return;
     }
@@ -355,7 +354,7 @@ const login = async (req, res) => {
         const token = (0, security_1.generateJWT)({ userId: user.id, email: user.email });
         const redisClient = await (0, redis_1.initializeRedisClient)();
         const accessToken = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: "15m" });
-        const refreshToken = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        const refreshToken = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, process.env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
         await redisClient.set(`refresh:${user.id}`, refreshToken, "EX", 7 * 24 * 60 * 60);
         await redisClient.set(`session:${user.id}`, accessToken, "EX", 15 * 60);
         res.cookie("token", accessToken, {
@@ -365,7 +364,7 @@ const login = async (req, res) => {
             maxAge: 15 * 60 * 1000,
         })
             .status(200).json({
-            success: monitor_1.authSuccessCounter.inc(),
+            success: true,
             message: "Login Successful",
             user: {
                 id: user.id,
@@ -466,14 +465,14 @@ const requireAdmin = (req, res, next) => {
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         if (decoded.role !== "ADMIN") {
-            res.status(403).json({ error: "Forbidden: Admin only" });
+            return res.status(403).json({ error: "Forbidden: Admin only" });
         }
         //const user = (req as any).user;
         //if(!user || user.role !==" ADMIN"){
         //res.status(403).json({success:false,message:"Admin access required"})
         //return;
         //}
-        next();
+        return next();
     }
     catch (error) {
         res.status(401).json({ error: "Invalid or expired token" });

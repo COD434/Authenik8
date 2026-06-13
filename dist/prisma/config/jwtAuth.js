@@ -10,17 +10,12 @@ const redis_1 = require("./redis");
 const monitor_1 = require("./Monitor/monitor");
 const crypto_1 = __importDefault(require("crypto"));
 dotenv_1.default.config();
-const redisClientPromise = (0, redis_1.setupRedis)();
-let redisClient;
-redisClientPromise.then(({ redisClient: client }) => {
-    redisClient = client;
-}).catch(err => console.error("Redis setup error", err));
 const T_EXPIRY = "1d";
 const guestToken = () => {
     const Payload = {
         type: "guest",
         id: crypto_1.default.randomUUID(),
-        createdAt: Date.now
+        createdAt: Date.now()
     };
     //if(guestToken()){
     monitor_1.guestCounter.inc();
@@ -29,7 +24,7 @@ const guestToken = () => {
 exports.guestToken = guestToken;
 const verifyToken = (token) => {
     try {
-        jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+        return jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
     }
     catch (_a) {
         return null;
@@ -46,6 +41,7 @@ const authenticateJWT = async (req, res, next) => {
     }
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+        const redisClient = await (0, redis_1.initializeRedisClient)();
         const storedToken = await redisClient.get(`session:${decoded.userId}`);
         if (storedToken !== token) {
             res.status(403).json({ success: false, message: "Invalid session", errors: [] });

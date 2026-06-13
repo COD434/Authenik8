@@ -4,10 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initializeRedisClient = exports.setupRedis = void 0;
+exports.resetRedisClient = exports.initializeRedisClient = exports.setupRedis = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const connect_redis_1 = require("connect-redis");
 const ioredis_1 = __importDefault(require("ioredis"));
+const ioredis_mock_1 = __importDefault(require("ioredis-mock"));
 dotenv_1.default.config();
 let redisClientInstance = null;
 const DEFAULT_REDIS_CONFIG = {
@@ -42,49 +43,59 @@ const getRedisConfig = (options) => {
     return config;
 };
 const setupRedis = async (options) => {
+    if (redisClientInstance) {
+        return {
+            redisClient: redisClientInstance,
+            redisStore: new connect_redis_1.RedisStore(Object.assign(Object.assign({ client: redisClientInstance }, DEFAULT_STORE_OPTIONS), options === null || options === void 0 ? void 0 : options.storeOptions))
+        };
+    }
     try {
-        //if(redisClient && redisStore){
-        //return{redisClient,redisStore};
-        //}
         const config = getRedisConfig(options === null || options === void 0 ? void 0 : options.redisConfig);
         const storeOptions = Object.assign(Object.assign({}, DEFAULT_STORE_OPTIONS), options === null || options === void 0 ? void 0 : options.storeOptions);
-        const redisClient = new ioredis_1.default({
-            host: config.host,
-            port: Number(config.port),
-            password: config.password,
-            retryStrategy: (times) => Math.min(times * 50, 2000),
-            maxRetriesPerRequest: config.maxRetriesPerRequest
-        });
-        await new Promise((resolve, reject) => {
-            redisClient.once("ready", async () => {
-                try {
-                    const pong = await redisClient.ping();
-                    console.log("Redis ping response:", pong);
-                    resolve();
-                }
-                catch (err) {
+        const redisClient = process.env.NODE_ENV === "test"
+            ? new ioredis_mock_1.default()
+            : new ioredis_1.default({
+                host: config.host,
+                port: Number(config.port),
+                password: config.password,
+                retryStrategy: (times) => Math.min(times * 50, 2000),
+                maxRetriesPerRequest: config.maxRetriesPerRequest
+            });
+        if (process.env.NODE_ENV !== "test") {
+            await new Promise((resolve, reject) => {
+                redisClient.once("ready", async () => {
+                    try {
+                        const pong = await redisClient.ping();
+                        console.log("Redis ping response:", pong);
+                        resolve();
+                    }
+                    catch (err) {
+                        reject(err);
+                    }
+                });
+                redisClient.once("error", (err) => {
                     reject(err);
-                }
+                });
             });
-            redisClient.once("error", (err) => {
-                reject(err);
-            });
-        });
+        }
         const redisStore = new connect_redis_1.RedisStore({
             client: redisClient,
             prefix: storeOptions.prefix,
             ttl: storeOptions.ttl
         });
-        redisClient.on("error", (err) => {
-            console.error("Redis client error:", err);
-        });
-        redisClient.on("ready", () => {
-            console.log("Redis client is ready");
-        });
-        redisClient.on("reconnecting", () => {
-            console.log("Redis client reconnecting...");
-        });
-        return { redisClient, redisStore };
+        if (process.env.NODE_ENV !== "test") {
+            redisClient.on("error", (err) => {
+                console.error("Redis client error:", err);
+            });
+            redisClient.on("ready", () => {
+                console.log("Redis client is ready");
+            });
+            redisClient.on("reconnecting", () => {
+                console.log("Redis client reconnecting...");
+            });
+        }
+        redisClientInstance = redisClient;
+        return { redisClient: redisClientInstance, redisStore };
     }
     catch (error) {
         console.error("Redis setup failed:", error);
@@ -100,3 +111,11 @@ const initializeRedisClient = async () => {
     return redisClientInstance;
 };
 exports.initializeRedisClient = initializeRedisClient;
+const resetRedisClient = async () => {
+    if (redisClientInstance) {
+        await redisClientInstance.flushall();
+        await redisClientInstance.quit();
+        redisClientInstance = null;
+    }
+};
+exports.resetRedisClient = resetRedisClient;

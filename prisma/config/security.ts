@@ -1,8 +1,7 @@
 import dotenv from "dotenv"
 import helmet from  "helmet";
-import Redis from "ioredis"
-import {RateLimiterRedis} from "rate-limiter-flexible";
-import csrf from "csurf";                                                   
+import {isIpInCidr} from "./ipAddress";
+import {initializeRedisClient} from "./redis";
 import jwt from "jsonwebtoken";
 dotenv.config({path:".env"});
 const IP_EXPIRATION_SECONDS = 7 * 24 * 60 * 60;
@@ -29,25 +28,11 @@ jwt.sign(payload, JWT_SECRET,{expiresIn: EXPIRY});
 export const verifyJWT = (token:  string)=>
 jwt.verify(token, JWT_SECRET);
 
-
-
-
-
-
-const redisClient = new Redis({
-host:process.env.REDIS_HOST!,
-port:Number(process.env.REDIS_PORT!),
-enableOfflineQueue: false,
-retryStrategy:(times)=> Math.min(times * 50, 2000),
-maxRetriesPerRequest:10,
-//password:process.env.REDIS_PASSWORD
-});
-const WHITELIST_KEY = process.env.WHITELIST_KEY
 export const dynamicWhiteList={
 	
 	isAllowed:async (ip: string): Promise<boolean> =>{
     try{
-	    
+	    const redisClient = await initializeRedisClient();
 	    const keys = await redisClient.keys("whitelist:ip:*");
 	
 
@@ -58,9 +43,7 @@ if(entry === ip || ip === "::1" || ip === "127.0.0.1"){
 return true
 }
 if(entry.includes("/")){
-const CIDR = (await import("ip-cidr")).default;
-const cidr = new CIDR(entry);
-if (cidr.contains(ip))return true
+if (isIpInCidr(ip, entry))return true
 }
   
  }
@@ -73,17 +56,20 @@ return false;
 	},
   
 addIP:async (ipOrCIDR: string,ttl: number = IP_EXPIRATION_SECONDS) =>{
+const redisClient = await initializeRedisClient();
 const key=`whitelist:ip:${ipOrCIDR}`;
 await redisClient.sadd(key,"1");
 await redisClient.expire(key,ttl)
   },
 	removeIP:async(ipOrCIDR: string) =>{
+	const redisClient = await initializeRedisClient();
 	const key =`whitelist:ip:${ipOrCIDR}`;
 	 await redisClient.srem(key,"1");
 	 await redisClient.del(key);
 	//console.log("removeIP route hit by:",(req as any).user);
   },
   listIP:async():Promise<string[]> =>{
+	  const redisClient = await initializeRedisClient();
 	  const keys= await redisClient.keys("whitelist:ip:*");
 	  return keys.map(key => key.replace("whitelist:ip:",""));
   },
@@ -135,33 +121,4 @@ await redisClient.expire(key,ttl)
     ];
 
   
-//app.use(securityHeadersi)
-const ratelimiter = new RateLimiterRedis({
-storeClient: redisClient,
-keyPrefix: "rate_limit",
-points: 100,
-duration: 60,
-blockDuration:300
-});
-
-const rateLimiterM = (req: any, res:Response, next:any)=>{
-ratelimiter.consume(req.ip)
-.then(()=> next())
-//.catch(()=> res.status(429).send("Too Many Request"))
-};
-//app.use(rateLimiterM)
-
-//const csrfProtection = csrf({cookie:true});
-//app.use(csrfProtection);
-redisClient.on("error", (err)=>{
-console.error("Security Redis error:",err)
-});
-
-redisClient.on("connect",()=>{
-console.log("Security Redis connected to:",  redisClient.options.host)
-})
-
-
-
 export {securityHeaders}
-

@@ -196,7 +196,7 @@ const requestPassword = async (req:Request, res:Response , next:NextFunction)=>{
 const {email} = req.body;
 
 if(!email){
-res.status(400).json({
+return res.status(400).json({
 success:false,
 message:"Email is required"})
 }
@@ -230,9 +230,9 @@ try{
     })
 
     if(!user){
-       res.status(400).json({error: "Invalid or expired OTP", email});
+       return res.status(400).json({error: "Invalid or expired OTP", email});
 	    }
-    res.status(200).json({success:true, message:"OTP verified,Please enter your new password"});
+return res.status(200).json({success:true, message:"OTP verified,Please enter your new password"});
   }catch(err){
 const errorMessage = err instanceof Error ? err.message : "Unknown error";
     return res.status(400).json({message: errorMessage})
@@ -242,7 +242,6 @@ const errorMessage = err instanceof Error ? err.message : "Unknown error";
 //Update password
 export const UpdatePassword = async(req:Request,res:Response ,next:NextFunction)=>{
   const {email,password}=req.body;
-        const hashed = await bcrypt.hash(password,10)
  
         if(!email || !password ){
   return res.status(400).json({
@@ -250,6 +249,7 @@ export const UpdatePassword = async(req:Request,res:Response ,next:NextFunction)
   message:"Email,password are required"})
   }
         try{
+    const hashed = await bcrypt.hash(password,10)
     const user = await prisma.user.findFirst({
       where:{email}
     })
@@ -372,8 +372,7 @@ bcryptRounds = 10
      
 	  res.status(400).json({
 	success:false,
-      validationErrors: errors.array(),
-      FormData: req.body
+      validationErrors: errors.array()
     })
 			 
 	return;	
@@ -514,7 +513,7 @@ process.env.JWT_SECRET!,
 {expiresIn:"15m"}
 );
 const refreshToken= jwt.sign({userId:user.id, email:user.email},
-process.env.JWT_SECRET!,
+process.env.JWT_REFRESH_SECRET!,
 {expiresIn:"7d"})
 
 await redisClient.set(`refresh:${user.id}`,refreshToken, "EX", 7 * 24 * 60 * 60 )
@@ -528,8 +527,8 @@ maxAge: 15 * 60 * 1000,
 })
 
 
-.status(200).json({    
-	success: authSuccessCounter.inc(), 
+.status(200).json({
+	success: true,
 	message: "Login Successful",
 	user:{
         id:user.id,
@@ -646,7 +645,7 @@ const token= authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : authH
 try{
 	const decoded = jwt.verify(token,process.env.JWT_SECRET!) as any;
 	if(decoded.role !== "ADMIN"){
-	res.status(403).json({error:"Forbidden: Admin only"})
+	return res.status(403).json({error:"Forbidden: Admin only"})
 	}
 //const user = (req as any).user;
 //if(!user || user.role !==" ADMIN"){
@@ -655,7 +654,7 @@ try{
 //}
 
 
-next();
+return next();
 }catch(error){
 res.status(401).json({error:"Invalid or expired token"})
 }
@@ -670,4 +669,3 @@ userValidations,
 Lvalidations,
 vAL
 };
-

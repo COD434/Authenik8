@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  NODE_ENV: test
+  JWT_SECRET: test-jwt-secret-that-is-at-least-32-characters
+  JWT_REFRESH_SECRET: test-refresh-secret-that-is-at-least-32-characters
+  SESSION_SECRET: test-session-secret-that-is-at-least-32-characters
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npm run build
+      - run: npm run test:unit
+
+  api-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: seeisa
+          POSTGRES_PASSWORD: karabo
+          POSTGRES_DB: top_user_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U seeisa -d top_user_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://seeisa:karabo@localhost:5432/top_user_test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npx prisma db push --skip-generate
+      - run: npm run test:integration
+
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [quality, api-tests]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Package release artifact
+        run: |
+          tar \
+            --sort=name \
+            --mtime='UTC 1970-01-01' \
+            --owner=0 \
+            --group=0 \
+            --numeric-owner \
+            -czf "authenik8-${GITHUB_SHA}.tar.gz" \
+            dist \
+            package.json \
+            package-lock.json \
+            prisma/schema.prisma \
+            README.md \
+            LICENSE.md
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: authenik8-${{ github.sha }}
+          path: authenik8-${{ github.sha }}.tar.gz
+          if-no-files-found: error
+
+      - name: Attest build provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: authenik8-${{ github.sha }}.tar.gz
+
+      - run: npm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

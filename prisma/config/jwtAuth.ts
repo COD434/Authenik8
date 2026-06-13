@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import {Request, Response, NextFunction} from "express";
 import jwt from "jsonwebtoken";
-import {setupRedis} from "./redis";
+import {initializeRedisClient} from "./redis";
 import {guestCounter, guestBlocked} from "./Monitor/monitor";
 import crypto from "crypto"
 dotenv.config();
@@ -11,19 +11,12 @@ userId: string;
 email: string;
 }
 
-const redisClientPromise = setupRedis();
-let redisClient:any;
-redisClientPromise.then(({redisClient: client}) =>{
-redisClient = client;
-}).catch (err => console.error("Redis setup error",err));
-
-
 const T_EXPIRY = "1d"
 export const guestToken = (): string =>{
 const Payload={
 type: "guest",
 id:crypto.randomUUID(),
-createdAt:Date.now
+createdAt:Date.now()
   }
   //if(guestToken()){
   guestCounter.inc();
@@ -34,7 +27,7 @@ return jwt.sign(Payload,process.env.JWT_SECRET!,{expiresIn:T_EXPIRY});
 
 export const verifyToken = (token:string): any | null=>{
 try{
-jwt.verify(token,process.env.JWT_SECRET!);
+return jwt.verify(token,process.env.JWT_SECRET!);
 }catch{
 return null;
  }
@@ -53,6 +46,7 @@ return;
 try{
 
 	const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload
+	const redisClient = await initializeRedisClient();
 	const storedToken = await redisClient.get(`session:${decoded.userId}`);
 	if(storedToken !== token){
 res.status(403).json({success:false, message: "Invalid session", errors:[]})
@@ -66,4 +60,3 @@ res.status(403).json({success: false ,message: "Invalid  or expired token"})
 return;
 };
 }
-

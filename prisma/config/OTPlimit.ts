@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
-import Redis,{Redis as RedisClient}  from "ioredis"
-import {RateLimiterRedis ,RateLimiterMemory} from "rate-limiter-flexible";
+import {Redis as RedisClient} from "ioredis"
 import {setupRedis} from "./redis"
 import {Request, Response, NextFunction} from "express"
  import {RatelimitsBlocked, RatelimitAllowed} from "./Monitor/monitor"
@@ -105,12 +104,6 @@ const RATE_LIMIT_CONFIGS= {
 	keyGenerator:(req: Request) => req.ip || "unknown"
 	}
 };
-
-initializeRateLimiter().catch((err) => {
-  console.error("Failed to initialize rate limiters:", err);
-  process.exit(1);
-})
-
 
 export const OTPLimiterMiddleware = () =>createRatelimiter(RATE_LIMIT_CONFIGS.OTP);
 export const LoginLimiterMiddleware = () => createRatelimiter(RATE_LIMIT_CONFIGS.LOGIN);
