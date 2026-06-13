@@ -55,7 +55,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use((req, _res, next) => {
-  req.url = req.url.replace(/[\n\r%0A%0D]+$/i, "");
+  req.url = req.url.replace(/(?:\r|\n|%0a|%0d)+$/gi, "");
   next();
 });
 

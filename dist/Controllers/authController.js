@@ -61,10 +61,10 @@ const Incognito = (req, res, next) => {
         const GToken = (0, jwtAuth_1.guestToken)();
         user = (0, jwtAuth_1.verifyToken)(GToken);
         res.setHeader("X-Guest-Token", GToken);
-        monitor_2.guestCounter.inc({ endpoint: req.path });
+        monitor_2.guestCounter.inc({ endpoint: req.originalUrl });
     }
     if ((user === null || user === void 0 ? void 0 : user.type) === "guest-mode") {
-        monitor_2.guestBlocked.inc({ endpoint: req.path, method: req.method });
+        monitor_2.guestBlocked.inc({ endpoint: req.originalUrl, method: req.method });
     }
     res.user = user;
     next();

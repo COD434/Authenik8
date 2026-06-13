@@ -154,11 +154,11 @@ if(!user){
 const GToken = guestToken();
 user = verifyToken(GToken);
 res.setHeader("X-Guest-Token",GToken);
-guestCounter.inc({endpoint:req.path});  
+guestCounter.inc({endpoint:req.originalUrl});
 
 }
 if(user?.type === "guest-mode"){
-guestBlocked.inc({endpoint: req.path, method: req.method})
+guestBlocked.inc({endpoint: req.originalUrl, method: req.method})
 }
   (res as any).user = user;
   next();

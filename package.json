@@ -1,6 +1,6 @@
 {
-  "name": "api",
-  "version": "1.0.1",
+  "name": "Authenik8-API",
+  "version": "0.0.1",
   "main": "server.ts",
   "scripts": {
     "build": "tsc",
@@ -11,6 +11,7 @@
     "test:unit": "mocha --require ts-node/register --require tests/setup.ts \"tests/**/*.unit.test.ts\"",
     "test:e2e": "mocha --require ts-node/register --require tests/setup.ts --require tests/hooks.ts \"tests/**/*.e2e.test.ts\"",
     "test:robustness": "TEST_SKIP_DATABASE=true mocha --require ts-node/register --require tests/setup.ts --require tests/hooks.ts \"tests/robustness.test.ts\"",
+    "pretest:integration": "node tests/prepare-integration.cjs",
     "test:integration": "mocha --require ts-node/register --require tests/setup.ts --require tests/hooks.ts \"tests/**/*.e2e.test.ts\" \"tests/robustness.test.ts\"",
     "release": "semantic-release"
   },

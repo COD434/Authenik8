@@ -33,7 +33,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use((req, _res, next) => {
-    req.url = req.url.replace(/[\n\r%0A%0D]+$/i, "");
+    req.url = req.url.replace(/(?:\r|\n|%0a|%0d)+$/gi, "");
     next();
 });
 const registerRoutes = () => {
