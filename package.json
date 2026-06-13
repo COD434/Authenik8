@@ -1,6 +1,6 @@
 {
   "name": "Authenik8-API",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "server.ts",
   "scripts": {
     "build": "tsc",
