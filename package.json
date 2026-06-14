@@ -2,6 +2,9 @@
   "name": "authenik8-api",
   "version": "1.0.3",
   "description": "This is the authenik8 API  have fun with it ",
+  "version": "1.0.4",
+  "main": "dist/server.js",
+  "description": "",
   "keywords": [],
   "homepage": "https://github.com/COD434/Authenik8#readme",
   "bugs": {
