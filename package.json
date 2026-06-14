@@ -1,16 +1,22 @@
 {
-  "name": "@thesbd/authenik8-api",
-  "version": "1.0.2",
   "name": "authenik8-api",
   "version": "1.0.3",
-  "main": "dist/server.js",
-  "description": "",
+  "description": "This is the authenik8 API  have fun with it ",
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "homepage": "https://github.com/COD434/Authenik8#readme",
+  "bugs": {
+    "url": "https://github.com/COD434/Authenik8/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/COD434/Authenik8.git"
+    "url": "git+https://github.com/COD434/Authenik8.git"
+  },
+  "license": "MIT",
+  "author": "Karabo seeisa",
+  "type": "commonjs",
+  "main": "dist/server.js",
+  "directories": {
+    "test": "tests"
   },
   "files": [
     "dist/Controllers",
@@ -21,10 +27,6 @@
     "prisma/schema.prisma",
     "prisma/migrations"
   ],
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
   "scripts": {
     "build": "tsc",
     "devStart": "nodemon server.ts",
@@ -38,49 +40,6 @@
     "test:integration": "mocha --require ts-node/register --require tests/setup.ts --require tests/hooks.ts \"tests/**/*.e2e.test.ts\" \"tests/robustness.test.ts\"",
     "release": "semantic-release",
     "release:check": "semantic-release --dry-run --no-ci"
-  },
-  "overrides": {
-    "mocha": {
-      "diff": "^8.0.3",
-      "serialize-javascript": "^7.0.5"
-    }
-  },
-  "devDependencies": {
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "^13.0.1",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^12.0.8",
-    "@semantic-release/npm": "^13.1.5",
-    "@semantic-release/release-notes-generator": "^14.1.1",
-    "@types/amqplib": "^0.10.7",
-    "@types/bcrypt": "^6.0.0",
-    "@types/chai": "^5.2.2",
-    "@types/chai-http": "^3.0.5",
-    "@types/cookie-parser": "^1.4.9",
-    "@types/express": "^5.0.3",
-    "@types/express-serve-static-core": "^5.0.7",
-    "@types/ioredis": "^4.28.10",
-    "@types/jest": "^30.0.0",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "^24.1.0",
-    "@types/nodemailer": "^6.4.17",
-    "@types/passport": "^1.0.17",
-    "@types/sinon": "^17.0.4",
-    "@types/swagger-jsdoc": "^6.0.4",
-    "@types/swagger-ui-express": "^4.1.8",
-    "chai": "^5.2.1",
-    "ioredis-mock": "^8.13.1",
-    "jest": "^30.0.5",
-    "mocha": "^11.7.6",
-    "nodemon": "^3.1.10",
-    "prisma": "6.19.3",
-    "semantic-release": "^25.0.5",
-    "sinon": "^21.0.0",
-    "supertest": "^7.1.4",
-    "ts-jest": "^29.4.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
   },
   "dependencies": {
     "@prisma/client": "6.19.3",
@@ -123,5 +82,52 @@
     "twilio": "^5.8.0",
     "uuid": "^11.1.0",
     "validator": "^13.15.15"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^12.0.8",
+    "@semantic-release/npm": "^13.1.5",
+    "@semantic-release/release-notes-generator": "^14.1.1",
+    "@types/amqplib": "^0.10.7",
+    "@types/bcrypt": "^6.0.0",
+    "@types/chai": "^5.2.2",
+    "@types/chai-http": "^3.0.5",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/express": "^5.0.3",
+    "@types/express-serve-static-core": "^5.0.7",
+    "@types/ioredis": "^4.28.10",
+    "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.1.0",
+    "@types/nodemailer": "^6.4.17",
+    "@types/passport": "^1.0.17",
+    "@types/sinon": "^17.0.4",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "chai": "^5.2.1",
+    "ioredis-mock": "^8.13.1",
+    "jest": "^30.0.5",
+    "mocha": "^11.7.6",
+    "nodemon": "^3.1.10",
+    "prisma": "6.19.3",
+    "semantic-release": "^25.0.5",
+    "sinon": "^21.0.0",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "overrides": {
+    "mocha": {
+      "diff": "^8.0.3",
+      "serialize-javascript": "^7.0.5"
+    }
   }
 }
