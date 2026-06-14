@@ -1,10 +1,8 @@
 {
   "name": "authenik8-api",
-  "version": "1.0.3",
-  "description": "This is the authenik8 API  have fun with it ",
-  "version": "1.0.4",
-  "main": "dist/server.js",
+  "version": "1.0.5",
   "description": "",
+  "main": "dist/server.js",
   "keywords": [],
   "homepage": "https://github.com/COD434/Authenik8#readme",
   "bugs": {
@@ -17,7 +15,6 @@
   "license": "MIT",
   "author": "Karabo seeisa",
   "type": "commonjs",
-  "main": "dist/server.js",
   "directories": {
     "test": "tests"
   },
