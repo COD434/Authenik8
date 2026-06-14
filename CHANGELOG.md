@@ -1,3 +1,11 @@
+## [1.0.7](https://github.com/COD434/Authenik8/compare/v1.0.6...v1.0.7) (2026-06-14)
+
+
+### Bug Fixes
+
+* just a test3 ([65e9d17](https://github.com/COD434/Authenik8/commit/65e9d17ea928ca96278e602b928bcc7c64670cc9))
+* just a test3 ([4361b02](https://github.com/COD434/Authenik8/commit/4361b02b93875f28ef907dc4cbcd4a2ea2625107))
+
 ## [1.0.6](https://github.com/COD434/Authenik8/compare/v1.0.5...v1.0.6) (2026-06-14)
 
 

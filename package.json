@@ -1,18 +1,13 @@
 {
   "name": "@thesbd/authenik8-api",
-<<<<<<< HEAD
-  "version": "1.0.4",
-<<<<<<< HEAD
+  "version": "1.0.7",
   "description": "",
   "main": "dist/server.js",
   "keywords": [],
-=======
-=======
-  "version": "1.0.7",
->>>>>>> 4b41551 (fix: updated version)
+
   "description": "This is the authenik8 api , fun with it",
   "keywords": ["api","starter-backend","auth","jwt","redis","A8"],
->>>>>>> 4dc44ff (fix: updated readme)
+
   "homepage": "https://github.com/COD434/Authenik8#readme",
   "bugs": {
     "url": "https://github.com/COD434/Authenik8/issues"
