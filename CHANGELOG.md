@@ -1,3 +1,11 @@
+## [1.0.4](https://github.com/COD434/Authenik8/compare/v1.0.3...v1.0.4) (2026-06-14)
+
+
+### Bug Fixes
+
+* **release:** this is empty and meant to work as a trigger2 ([81dc63e](https://github.com/COD434/Authenik8/commit/81dc63ec9a4d70d091f4f12e9a2e445b39fd607d))
+* **release:** this is empty and meant to work as a trigger2 ([724d2ab](https://github.com/COD434/Authenik8/commit/724d2ab4ed2cc82e730b27166f5f6d1677ab025a))
+
 ## [1.0.3](https://github.com/COD434/Authenik8/compare/v1.0.2...v1.0.3) (2026-06-14)
 
 
