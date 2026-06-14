@@ -1,6 +1,6 @@
 {
   "name": "authenik8-api",
-  "version": "0.0.2",
+  "version": "1.0.1",
   "main": "dist/server.js",
   "description": "",
   "keywords": [],
