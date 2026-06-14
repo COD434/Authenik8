@@ -90,7 +90,9 @@ jobs:
       - run: npm run build
 
       - name: Verify npm package contents
-        run: npm pack --dry-run
+        run: |
+          test "$(node -p "require('./package.json').name")" = "@thesbd/authenik8-api"
+          npm pack --dry-run
 
       - name: Package release artifact
         run: |
@@ -133,12 +135,10 @@ jobs:
           npm whoami --registry https://registry.npmjs.org/
 
       - name: Publish release
-        run: npm run release -- --debug
+        run: npm run release
         env:
-          DEBUG: semantic-release:*
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_LOGLEVEL: verbose
           NPM_CONFIG_PROVENANCE: "true"
     
