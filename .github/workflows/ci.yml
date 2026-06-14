@@ -88,6 +88,9 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Verify npm package contents
+        run: npm pack --dry-run
+
       - name: Package release artifact
         run: |
           tar \
@@ -116,10 +119,11 @@ jobs:
         with:
           subject-path: authenik8-${{ github.sha }}.tar.gz
 
-      - run: npm run release
+      - name: Publish release
+        run: npm run release
         env:
+          DEBUG: semantic-release:config,semantic-release:plugins
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: "true"
     
-
