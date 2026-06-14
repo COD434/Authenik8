@@ -325,7 +325,7 @@ service through GitHub clone, Docker, or direct Node.js execution.
 Planned npm install flow:
 
 ```bash
-npm install authenik8
+npm install authenik8-api
 ```
 
 Until the package is published, use:
