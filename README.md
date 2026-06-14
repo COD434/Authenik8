@@ -18,7 +18,7 @@
 [Create a new Authenik8 project with `create-authenik8-app`](https://github.com/COD434/create-authenik8-app)
 
 <div align="center">
-# Authenik8
+<h1>Authenik8</h1>
 </div>
 
 Authenik8 is a secure authentication and rate-limiting API for modern web apps.
