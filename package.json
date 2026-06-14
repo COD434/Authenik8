@@ -2,6 +2,13 @@
   "name": "Authenik8-API",
   "version": "1.0.0",
   "main": "server.ts",
+  "description":"This a stand alone API and a part of the Authenik8 ecosystem have fun with it",
+  "keywords":["api","starter", "backend-starter","authentication","typescript","A8"],
+  "author":"Karabo Seeisa",
+  "license":"MIT",
+  "publishConfig":{
+  "access":"public"
+  },
   "scripts": {
     "build": "tsc",
     "devStart": "nodemon server.ts",
