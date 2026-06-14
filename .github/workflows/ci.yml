@@ -120,12 +120,25 @@ jobs:
         with:
           subject-path: authenik8-${{ github.sha }}.tar.gz
 
-      - name: Publish release
-        run: npm run release
+      - name: Verify npm authentication
         env:
-          DEBUG: semantic-release:config,semantic-release:plugins
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::The NPM_TOKEN repository secret is missing or empty."
+            exit 1
+          fi
+
+          npm ping --registry https://registry.npmjs.org/
+          npm whoami --registry https://registry.npmjs.org/
+
+      - name: Publish release
+        run: npm run release -- --debug
+        env:
+          DEBUG: semantic-release:*
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_LOGLEVEL: verbose
           NPM_CONFIG_PROVENANCE: "true"
     
