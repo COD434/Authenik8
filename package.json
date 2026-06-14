@@ -1,13 +1,13 @@
 {
   "name": "Authenik8-API",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "server.ts",
-  "description":"This a stand alone API and a part of the Authenik8 ecosystem have fun with it",
-  "keywords":["api","starter", "backend-starter","authentication","typescript","A8"],
-  "author":"Karabo Seeisa",
-  "license":"MIT",
-  "publishConfig":{
-  "access":"public"
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc",
@@ -28,10 +28,6 @@
       "serialize-javascript": "^7.0.5"
     }
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
