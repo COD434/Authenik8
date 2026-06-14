@@ -1,5 +1,5 @@
 {
-  "name": "authenik8-api",
+  "name": "@thesbd/authenik8-api",
   "version": "1.0.2",
   "main": "dist/server.js",
   "description": "",
@@ -20,7 +20,8 @@
     "prisma/migrations"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "build": "tsc",
