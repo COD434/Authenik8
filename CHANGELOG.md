@@ -1,3 +1,12 @@
+## [1.0.8](https://github.com/COD434/Authenik8/compare/v1.0.7...v1.0.8) (2026-06-14)
+
+
+### Bug Fixes
+
+* updated readme ([01a32c4](https://github.com/COD434/Authenik8/commit/01a32c49bfbfa12b01d8c739ed6d0b705c29b053))
+* updated version ([a5947e5](https://github.com/COD434/Authenik8/commit/a5947e584008b7ea599442ac078b825cf64c9890))
+* updated version1 ([8bff750](https://github.com/COD434/Authenik8/commit/8bff7501083568e56b61171b089915b46a9b5d41))
+
 ## [1.0.7](https://github.com/COD434/Authenik8/compare/v1.0.6...v1.0.7) (2026-06-14)
 
 
